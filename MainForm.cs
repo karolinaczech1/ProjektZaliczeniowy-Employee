@@ -101,13 +101,29 @@ namespace ProjektZaliczeniowy
         {
             if (dgvCompany.SelectedRows.Count == 1)
             {
-                int id = Convert.ToInt32(dgvCompany.Rows[dgvCompany.CurrentRow.Index].Cells[0].Value); //wyznaczenie id zaznaczonej firmy
-                var selectedCompany = db.Company.Find(id);  
+                long id = Convert.ToInt32(dgvCompany.Rows[dgvCompany.CurrentRow.Index].Cells[0].Value); //wyznaczenie id zaznaczonej firmy
+                var selectedCompany = db.Company.Find(id);
+
+                //wyszukanie pracownikow, ktorzy mają przypisaną firmę, którą chcemy usunąć
+                List<Employee> employeeWithDeletedCompany =  (from em in db.Employee
+                                                              where em.CompanyId == id
+                                                              select em).ToList();
+               //zamiana przypisanej firmy na null
+                for(int i=0; i<employeeWithDeletedCompany.Count; i++)
+                {
+                   // MessageBox.Show(employeeWithDeletedCompany[i].Name +" - " + employeeWithDeletedCompany[i].CompanyId.ToString());
+                    var employee = db.Employee.Find(employeeWithDeletedCompany[i].Id);
+                    employee.CompanyId = null;
+                    db.SaveChanges();
+                }
+                DisplayEmployee();
+
+                //usuniecie firmy
                 db.Company.Remove(selectedCompany);
                 db.SaveChanges();
                 DisplayCompany();
-            
-            }   
+
+            }
         }
 
         //Przycisk do usuwania wybranego pracownika poprzez wybranie go w datagrid
