@@ -26,92 +26,45 @@ namespace ProjektZaliczeniowy
         }
 
         public mainEntities db = new mainEntities();
+
+        //przycisk do dodawania pracownika
         private void buttonAddEmployee_Click(object sender, EventArgs e)
         {
-            //SPRAWDZENIE, CZY WPISANO IMIE i NAZWISKO
-            if (txtBoxName.Text != string.Empty && txtBoxName.Text != string.Empty)
+            
+            if (txtBoxName.Text != string.Empty && txtBoxLastName.Text != string.Empty)  //sprawdzenie, czy wpisano imie i nazwisko
             {
                 string name = txtBoxName.Text;
                 string lastName = txtBoxLastName.Text;
-                
-                //SPRAWDZENIE, CZY UŻYTKOWNIK CHCE DODAC FIRME DLA PRACOWNIKA
-                if(checkBoxIfCompany.Checked == true)
+
+                //wyzanczenie id dla dodawanego pracownika
+                long id;
+                if (db.Employee.Count() > 0) id = db.Employee.Max(em => em.Id) + 1;
+                else id = 1;
+
+                //DODAWANIE PRACOWNIKA BEZ FIRMY
+                if (checkBoxIfCompany.Checked == true)
                 {
-                    var newEmployee = new Employee
-                    {
-                        Id = db.Employee.Count() + 1,
-                        Name = name,
-                        LastName = lastName,
-                        CompanyId = null
-                    };
-                    db.Employee.Add(newEmployee);
-                    db.SaveChanges();
-                    this.Close();
+                    AddEmployeeWithoutCompany(id, name, lastName);               
                 }
+                //dodawanie pracownika z firmą
                 else
                 {
-                    //SPRAWDZENIE, CZY UŻYTKOWNIK CHCE WYBRAC FIRME Z ISTNIEJACYCH, CZY DODAC NOWĄ
+                    //DODAWANIE PRACOWNIKA Z FIRMĄ WYBRANĄ Z ISTNIEJĄCYCH (z comboboxa)
                     if(checkBoxNewCompany.Checked == false)
-                    {
-                        //sprawdzenie, czy wybrano firmę z istniejących
-                        if(comboBoxCompany.SelectedItem != null)
+                    {                      
+                        if(comboBoxCompany.SelectedItem != null)   //sprawdzenie, czy wybrano firmę z istniejących
                         {
-                            List<Company> company = new List<Company>();
-                            string selectedCompany = comboBoxCompany.SelectedItem.ToString();
-                            company = (from c in db.Company where c.CompanyName == selectedCompany select c).ToList();
 
-                            var newEmployee = new Employee
-                            {
-                                Id = db.Employee.Count() + 1,
-                                Name = name,
-                                LastName = lastName,
-                                CompanyId = company[0].Id
-                            };
-                            db.Employee.Add(newEmployee);
-                            db.SaveChanges();
-                            this.Close();
-                        }
-                        
+                            AddEmployeeWithCompany(id, name, lastName);
+                            
+                        }                     
                     }
-                    else  //dodanie dodatkowo nowej firmy do bazy
-                    {
-                        //sprawdzenie, czy uzytkownik wpisal nazwe nowej firmy
-                        if(txtBoxNewCompany.Text != string.Empty)
+                    //DODAWANIE PRACOWNIKA WRAZ Z DODANIEM NOWEJ FIRMY
+                    else 
+                    {                      
+                        if(txtBoxNewCompany.Text != string.Empty)   //sprawdzenie, czy uzytkownik wpisal nazwe nowej firmy
                         {
-                            List<Company> addedCompany = new List<Company>();
-                            string companyName = txtBoxNewCompany.Text;
-
-                            //DODAWANIE NOWEJ FIRMY
-                            //sprawdzenie, czy wpisana nazwa firmy na pewno nie istnieje
-                            if (mainForm.isCompanyExist(companyName) == false)
-                            {
-                                var newCompany = new Company
-                                {
-                                    Id = db.Company.Count() + 1,
-                                    CompanyName = companyName,
-                                };
-                                db.Company.Add(newCompany);
-                                db.SaveChanges();
-
-
-                                addedCompany = (from c in db.Company where c.CompanyName == companyName select c).ToList();
-                                var newEmployee = new Employee
-                                {
-                                    Id = db.Employee.Count() + 1,
-                                    Name = name,
-                                    LastName = lastName,
-                                    CompanyId = addedCompany[0].Id
-                                };
-                                db.Employee.Add(newEmployee);
-                                db.SaveChanges();
-                                this.Close();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Firma " + companyName + " już istnieje - wybierz z listy");
-                                checkBoxNewCompany.Checked = false;
-                                comboBoxCompany.SelectedItem = companyName;
-                            }
+                            AddEmployeeAndCompany(id, name,  lastName);                        
                         }
                     }
                 }
@@ -120,6 +73,91 @@ namespace ProjektZaliczeniowy
 
         }
 
+
+
+        //dodawanie pracownika bez firmy
+        public void AddEmployeeWithoutCompany(long id, string name, string lastName)
+        {
+            var newEmployee = new Employee
+            {
+                Id = id,
+                Name = name,
+                LastName = lastName,
+                CompanyId = null
+            };
+
+            db.Employee.Add(newEmployee);
+            db.SaveChanges();
+            this.Close();
+        }
+
+        //dodawanie pracownika z firmą (wybraną z comboboxa)
+        public void AddEmployeeWithCompany(long id, string name, string lastName)
+        {
+            List<Company> company = new List<Company>();
+            string selectedCompany = comboBoxCompany.SelectedItem.ToString();
+            company = (from c in db.Company where c.CompanyName == selectedCompany select c).ToList();
+
+            var newEmployee = new Employee
+            {
+                Id = id,
+                Name = name,
+                LastName = lastName,
+                CompanyId = company[0].Id
+            };
+            db.Employee.Add(newEmployee);
+            db.SaveChanges();
+            this.Close();
+        }
+
+        //dodawanie pracownika wraz z utworzeniem nowej firmy
+        public void AddEmployeeAndCompany(long id, string name, string lastName)
+        {
+            List<Company> addedCompany = new List<Company>();
+            string companyName = txtBoxNewCompany.Text;
+         
+           
+            if (mainForm.isCompanyExist(companyName) == false)   //sprawdzenie, czy wpisana nazwa firmy na pewno nie istnieje
+            {
+                //dodanie nowej firmy
+                long newCompanyId;
+                if (db.Company.Count() > 0) newCompanyId = db.Company.Max(c => c.Id) + 1;
+                else newCompanyId = 1;
+                var newCompany = new Company
+                {
+                    Id = newCompanyId,
+                    CompanyName = companyName,
+                };
+                db.Company.Add(newCompany);
+                db.SaveChanges();
+
+                //dodnie pracownika z nową firmą
+                addedCompany = (from c in db.Company where c.CompanyName == companyName select c).ToList();
+                var newEmployee = new Employee
+                {
+                    Id = id,
+                    Name = name,
+                    LastName = lastName,
+                    CompanyId = addedCompany[0].Id
+                };
+                db.Employee.Add(newEmployee);
+                db.SaveChanges();
+                mainForm.DisplayCompany();
+                this.Close();
+            }
+            else  //jeśli dodawana firma już istnieje
+            {
+                MessageBox.Show("Firma " + companyName + " już istnieje - wybierz z listy");
+                checkBoxNewCompany.Checked = false;
+                comboBoxCompany.SelectedItem = companyName;
+            }
+        }
+
+
+
+
+
+        //wprowadzenie wszystkich firm do comboboxa
         public void GetCompanies()
         {
             List<string> companies = new List<string>();
@@ -146,7 +184,7 @@ namespace ProjektZaliczeniowy
             }
         }
 
-        //chceckbox - czy uzytkownik chce dodac nową firmę
+        //chceckbox - czy uzytkownik chce dodac nową firmę podczas dodawania pracownika
         private void checkBoxNewCompany_CheckedChanged(object sender, EventArgs e)
         {
             if(checkBoxNewCompany.Checked == true)

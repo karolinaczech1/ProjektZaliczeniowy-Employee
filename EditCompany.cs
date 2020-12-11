@@ -18,6 +18,7 @@ namespace ProjektZaliczeniowy
             InitializeComponent();
             mainForm = main;
 
+            //wczytanie danych firmy
             txtCompany.Text = mainForm.dgvCompany.Rows[mainForm.dgvCompany.CurrentRow.Index].Cells[1].Value.ToString();
         }
 

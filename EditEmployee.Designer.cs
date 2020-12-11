@@ -49,6 +49,7 @@
             this.checkBoxIfCompany.TabIndex = 19;
             this.checkBoxIfCompany.Text = "Brak Firmy";
             this.checkBoxIfCompany.UseVisualStyleBackColor = true;
+            this.checkBoxIfCompany.CheckedChanged += new System.EventHandler(this.checkBoxIfCompany_CheckedChanged);
             // 
             // buttonSave
             // 
@@ -58,6 +59,7 @@
             this.buttonSave.TabIndex = 18;
             this.buttonSave.Text = "ZAPISZ";
             this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // checkBoxNewCompany
             // 

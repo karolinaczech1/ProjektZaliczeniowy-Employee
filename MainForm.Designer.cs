@@ -28,19 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.dataGridEmployee = new System.Windows.Forms.DataGridView();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lastname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.company = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtBoxSearch = new System.Windows.Forms.TextBox();
             this.labelSearch = new System.Windows.Forms.Label();
             this.comboBoxSearch = new System.Windows.Forms.ComboBox();
-            this.dataGridCompany = new System.Windows.Forms.DataGridView();
-            this.CompanyId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ComanyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonEditEmployee = new System.Windows.Forms.Button();
             this.buttonEditCompan = new System.Windows.Forms.Button();
             this.buttonAddEmployee = new System.Windows.Forms.Button();
@@ -51,69 +41,12 @@
             this.dgvEmployee = new System.Windows.Forms.DataGridView();
             this.txtBoxCompanyName = new System.Windows.Forms.TextBox();
             this.labelCompanyName = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridEmployee)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridCompany)).BeginInit();
+            this.txtBoxSearchCompany = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxSearchCompany = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCompany)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmployee)).BeginInit();
             this.SuspendLayout();
-            // 
-            // dataGridEmployee
-            // 
-            this.dataGridEmployee.AllowUserToAddRows = false;
-            this.dataGridEmployee.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridEmployee.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle15;
-            this.dataGridEmployee.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridEmployee.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id,
-            this.name,
-            this.lastname,
-            this.company});
-            this.dataGridEmployee.Location = new System.Drawing.Point(12, 433);
-            this.dataGridEmployee.Name = "dataGridEmployee";
-            this.dataGridEmployee.ReadOnly = true;
-            this.dataGridEmployee.RowHeadersWidth = 51;
-            this.dataGridEmployee.RowTemplate.Height = 24;
-            this.dataGridEmployee.Size = new System.Drawing.Size(578, 251);
-            this.dataGridEmployee.TabIndex = 0;
-            // 
-            // id
-            // 
-            this.id.HeaderText = "ID";
-            this.id.MinimumWidth = 10;
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            this.id.Width = 75;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "Imie";
-            this.name.MinimumWidth = 6;
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            this.name.Width = 125;
-            // 
-            // lastname
-            // 
-            this.lastname.HeaderText = "Nazwisko";
-            this.lastname.MinimumWidth = 6;
-            this.lastname.Name = "lastname";
-            this.lastname.ReadOnly = true;
-            this.lastname.Width = 125;
-            // 
-            // company
-            // 
-            this.company.HeaderText = "Firma";
-            this.company.MinimumWidth = 6;
-            this.company.Name = "company";
-            this.company.ReadOnly = true;
-            this.company.Width = 200;
             // 
             // txtBoxSearch
             // 
@@ -121,6 +54,7 @@
             this.txtBoxSearch.Name = "txtBoxSearch";
             this.txtBoxSearch.Size = new System.Drawing.Size(218, 22);
             this.txtBoxSearch.TabIndex = 1;
+            this.txtBoxSearch.TextChanged += new System.EventHandler(this.txtBoxSearch_TextChanged);
             // 
             // labelSearch
             // 
@@ -138,46 +72,7 @@
             this.comboBoxSearch.Name = "comboBoxSearch";
             this.comboBoxSearch.Size = new System.Drawing.Size(161, 24);
             this.comboBoxSearch.TabIndex = 3;
-            // 
-            // dataGridCompany
-            // 
-            this.dataGridCompany.AllowUserToAddRows = false;
-            this.dataGridCompany.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridCompany.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
-            this.dataGridCompany.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridCompany.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.CompanyId,
-            this.ComanyName});
-            this.dataGridCompany.Location = new System.Drawing.Point(626, 433);
-            this.dataGridCompany.Name = "dataGridCompany";
-            this.dataGridCompany.ReadOnly = true;
-            this.dataGridCompany.RowHeadersWidth = 51;
-            this.dataGridCompany.RowTemplate.Height = 24;
-            this.dataGridCompany.Size = new System.Drawing.Size(332, 251);
-            this.dataGridCompany.TabIndex = 4;
-            // 
-            // CompanyId
-            // 
-            this.CompanyId.HeaderText = "ID";
-            this.CompanyId.MinimumWidth = 10;
-            this.CompanyId.Name = "CompanyId";
-            this.CompanyId.ReadOnly = true;
-            this.CompanyId.Width = 75;
-            // 
-            // ComanyName
-            // 
-            this.ComanyName.HeaderText = "Nazwa Firmy";
-            this.ComanyName.MinimumWidth = 50;
-            this.ComanyName.Name = "ComanyName";
-            this.ComanyName.ReadOnly = true;
-            this.ComanyName.Width = 200;
+            this.comboBoxSearch.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearch_SelectedIndexChanged);
             // 
             // buttonEditEmployee
             // 
@@ -279,9 +174,38 @@
             this.labelCompanyName.TabIndex = 14;
             this.labelCompanyName.Text = "nazwa firmy";
             // 
+            // txtBoxSearchCompany
+            // 
+            this.txtBoxSearchCompany.Location = new System.Drawing.Point(626, 30);
+            this.txtBoxSearchCompany.Name = "txtBoxSearchCompany";
+            this.txtBoxSearchCompany.Size = new System.Drawing.Size(158, 22);
+            this.txtBoxSearchCompany.TabIndex = 15;
+            this.txtBoxSearchCompany.TextChanged += new System.EventHandler(this.txtBoxSearchCompany_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(790, 33);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(61, 17);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "szukaj w";
+            // 
+            // comboBoxSearchCompany
+            // 
+            this.comboBoxSearchCompany.FormattingEnabled = true;
+            this.comboBoxSearchCompany.Location = new System.Drawing.Point(857, 30);
+            this.comboBoxSearchCompany.Name = "comboBoxSearchCompany";
+            this.comboBoxSearchCompany.Size = new System.Drawing.Size(161, 24);
+            this.comboBoxSearchCompany.TabIndex = 17;
+            this.comboBoxSearchCompany.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchCompany_SelectedIndexChanged);
+            // 
             // MainForm
             // 
-            this.ClientSize = new System.Drawing.Size(1087, 686);
+            this.ClientSize = new System.Drawing.Size(1070, 455);
+            this.Controls.Add(this.comboBoxSearchCompany);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtBoxSearchCompany);
             this.Controls.Add(this.labelCompanyName);
             this.Controls.Add(this.txtBoxCompanyName);
             this.Controls.Add(this.dgvEmployee);
@@ -292,14 +216,10 @@
             this.Controls.Add(this.buttonAddEmployee);
             this.Controls.Add(this.buttonEditCompan);
             this.Controls.Add(this.buttonEditEmployee);
-            this.Controls.Add(this.dataGridCompany);
             this.Controls.Add(this.comboBoxSearch);
             this.Controls.Add(this.labelSearch);
             this.Controls.Add(this.txtBoxSearch);
-            this.Controls.Add(this.dataGridEmployee);
             this.Name = "MainForm";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridEmployee)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridCompany)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCompany)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmployee)).EndInit();
             this.ResumeLayout(false);
@@ -311,27 +231,22 @@
 
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.DataGridView dataGridEmployee;
         private System.Windows.Forms.TextBox txtBoxSearch;
         private System.Windows.Forms.Label labelSearch;
         private System.Windows.Forms.ComboBox comboBoxSearch;
-        private System.Windows.Forms.DataGridView dataGridCompany;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CompanyId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ComanyName;
         private System.Windows.Forms.Button buttonEditEmployee;
         private System.Windows.Forms.Button buttonEditCompan;
         private System.Windows.Forms.Button buttonAddEmployee;
         private System.Windows.Forms.Button buttonAddCompany;
         private System.Windows.Forms.Button buttonDeleteEmployee;
         private System.Windows.Forms.Button buttonDeleteCompan;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn lastname;
-        private System.Windows.Forms.DataGridViewTextBoxColumn company;
         private System.Windows.Forms.TextBox txtBoxCompanyName;
         private System.Windows.Forms.Label labelCompanyName;
         public System.Windows.Forms.DataGridView dgvCompany;
         public System.Windows.Forms.DataGridView dgvEmployee;
+        private System.Windows.Forms.TextBox txtBoxSearchCompany;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxSearchCompany;
     }
 }
 

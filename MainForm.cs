@@ -18,47 +18,24 @@ namespace ProjektZaliczeniowy
 
             DisplayEmployee();
             DisplayCompany();
+
+            GetDgvEmloyeeColumns();
+            comboBoxSearch.SelectedIndex = 0;
+            GetDgvCompanyColumns();
+            comboBoxSearchCompany.SelectedIndex = 1;
+
         }
 
 
         
         public mainEntities db = new mainEntities();
 
-        //wyświetlanie danych z bazy dotyczących pracowników w dataGridView
-        public void DisplayEmployee()
-        {
-
-            BindingSource bs = new BindingSource();
-            var query = from e in db.Employee
-                        select new { e.Id, e.Name, e.LastName, e.Company.CompanyName };
-            bs.DataSource = query.ToList();
-            dgvEmployee.DataSource = bs;
-            dgvEmployee.Refresh();
-            dgvEmployee.Columns[0].HeaderText = "ID Pracownika";
-            dgvEmployee.Columns[1].HeaderText = "Imie ";
-            dgvEmployee.Columns[2].HeaderText = "Nazwisko ";
-            dgvEmployee.Columns[3].HeaderText = "Nazwa Firmy";
-
-        }
-
-        //wyświetlanie danych z bazy dotyczących firm w dataGridView
-        public void DisplayCompany()
-        {
-           
-            BindingSource bs = new BindingSource();
-            var query = from c in db.Company
-                        select new { c.Id, c.CompanyName };
-            bs.DataSource = query.ToList();          
-            dgvCompany.DataSource = bs;
-            dgvCompany.Refresh();
-            dgvCompany.Columns[0].HeaderText = "ID Firmy";
-            dgvCompany.Columns[1].HeaderText = "Nazwa Firmy";
-
-        }
 
 
+        
 
-        //---------------------------- DODAWANIE DANYCH -------------------------- //
+
+        //----------------------------------- DODAWANIE DANYCH ------------------------------------------------------- //
 
         //dodawanie nowego pracownika
         private void buttonAddEmployee_Click(object sender, EventArgs e)
@@ -66,19 +43,25 @@ namespace ProjektZaliczeniowy
 
             AddEmployeeForm NewEmployee = new AddEmployeeForm(this);
             NewEmployee.ShowDialog();  //otworzenie nowego okna
-            DisplayCompany();
             DisplayEmployee();
+           
        
         }
+        //dodwanie nowej firmy
         private void buttonAddCompany_Click(object sender, EventArgs e)
         {
             if(txtBoxCompanyName.Text != string.Empty)
             {
                 if (isCompanyExist(txtBoxCompanyName.Text) == false)
                 {
+                    //wyzanczenie id dla dodawanej firmy
+                    long id;
+                    if (db.Company.Count() > 0) id = db.Company.Max(c => c.Id) + 1;
+                    else id = 1;
+                    
                     var newCompany = new Company
                     {
-                        Id = db.Company.Count() + 1,
+                        Id = id,
                         CompanyName = txtBoxCompanyName.Text
                     };
                     db.Company.Add(newCompany);
@@ -93,7 +76,7 @@ namespace ProjektZaliczeniowy
 
 
 
-        //---------------------------- USUWANIE DANYCH -------------------------- //
+        //----------------------------------------- USUWANIE DANYCH ------------------------------------------------ //
 
 
         //Przycisk do usuwania wybranej firmy z bazy poprzez wybranie jej w datagrid
@@ -140,27 +123,228 @@ namespace ProjektZaliczeniowy
             }
         }
 
-        //---------------------------- EDYCJA DANYCH -------------------------- //
+
+
+        //-------------------------------------- EDYCJA DANYCH ---------------------------------------------- //
         private void buttonEditEmployee_Click(object sender, EventArgs e)
         {
-
+            if(dgvEmployee.RowCount > 0)
+            {              
+                EditEmployee editEmployee = new EditEmployee(this);
+                editEmployee.ShowDialog();
+                DisplayEmployee();
+            }
+           
         }
 
         private void buttonEditCompan_Click(object sender, EventArgs e)
         {
-            int currentRow = dgvCompany.CurrentRow.Index;
-            EditCompany editCompany = new EditCompany(this);
-            editCompany.ShowDialog();  //otworzenie nowego okna
-            DisplayCompany();
-            //dgvCompany.ClearSelection();
-            //dgvCompany.Rows[currentRow].Selected = true;
-            dgvCompany.CurrentCell = dgvCompany.Rows[currentRow].Cells[0];
+            if (dgvCompany.RowCount > 0)
+            {
+                int currentRow = dgvCompany.CurrentRow.Index;
+                EditCompany editCompany = new EditCompany(this);
+                editCompany.ShowDialog();  //otworzenie nowego okna
+                DisplayCompany();
+                //dgvCompany.ClearSelection();
+                //dgvCompany.Rows[currentRow].Selected = true;
+                dgvCompany.CurrentCell = dgvCompany.Rows[currentRow].Cells[0];
+            }
 
         }
 
 
 
-        //---------------------------- SPRAWDZENIE CZY ISTNIEJE -------------------------- //
+        //-----------------------------------  WYSZUKIWANIE PRACOWNIKA  ---------------------------------------------//
+
+        //wyszukiwanie podczas zmiany tekstu w textboxie do wszukiwania pracownika
+        private void txtBoxSearch_TextChanged(object sender, EventArgs e)
+        {
+            SearchEmployee();
+        }
+
+        //zmiana kolumny wyszukiwania
+        private void comboBoxSearch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SearchEmployee();
+        }
+
+        //--------------------------WYSZUKIWANIE FIRMY -------------------------------------//
+
+        //wyszukiwanie podczas zmiany tekstu w textboxie do wszukiwania firmy
+        private void txtBoxSearchCompany_TextChanged(object sender, EventArgs e)
+        {
+            SearchCompany();
+        }
+
+        //zmiana kolumny wyszukiwania
+        private void comboBoxSearchCompany_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SearchCompany();
+        }
+
+
+
+
+
+
+
+        //********************************************   FUNKCJE   *************************************************//
+
+
+
+
+        //funkcja do wyszukiwania firmy
+        public void SearchCompany()
+        {
+            if(txtBoxSearchCompany.Text == string.Empty)
+            {
+                DisplayCompany();
+            }
+            else
+            {
+                string searched = txtBoxSearchCompany.Text.ToUpper();
+
+                if(comboBoxSearchCompany.SelectedIndex == 0)  //szukanie w kolumnie "Id Firmy"
+                {
+                    int id;
+                    bool isNumeric = int.TryParse(searched, out id);
+                    if (isNumeric == true)
+                    {
+                        BindingSource bs = new BindingSource();
+                        bs.DataSource = (from co in db.Company
+                                         where co.Id == id
+                                         select new { co.Id, co.CompanyName } ).ToList();
+                        dgvCompany.DataSource = bs;
+
+                    }
+                }
+                else  //szukanie w kolumnie "Nazwa Firmy"
+                {
+                    BindingSource bs = new BindingSource();
+                    bs.DataSource = (from co in db.Company
+                                     where co.CompanyName.ToUpper().Contains(searched)
+                                     select new { co.Id, co.CompanyName }).ToList();
+                    dgvCompany.DataSource = bs;
+                }
+
+                dgvCompany.Refresh();
+                dgvCompany.Columns[0].HeaderText = "ID Firmy";
+                dgvCompany.Columns[1].HeaderText = "Nazwa Firmy";
+
+            }
+        }
+
+        //funkcja do wyszukiwania pracownika
+        public void SearchEmployee()
+        {
+            if (txtBoxSearch.Text == string.Empty)
+            {
+                DisplayEmployee();
+            }
+            else
+            {
+                string searched = txtBoxSearch.Text.ToUpper();
+
+                if (comboBoxSearch.SelectedIndex == 0)  //szukanie w kolumnie "ID Pracownika"
+                {
+                    int id;
+                    bool isNumeric = int.TryParse(searched, out id);
+                    if (isNumeric == true)
+                    {
+                        BindingSource bs = new BindingSource();
+                        bs.DataSource = (from em in db.Employee
+                                         where em.Id == id
+                                         select new { em.Id, em.Name, em.LastName, em.Company.CompanyName }).ToList();
+                        dgvEmployee.DataSource = bs;
+
+                    }
+                }
+                else if (comboBoxSearch.SelectedIndex == 1)  //szukanie w kolumnie "Imie"
+                {
+                    BindingSource bs = new BindingSource();
+                    bs.DataSource = (from em in db.Employee
+                                     where em.Name.ToUpper().Contains(searched)
+                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName }).ToList();
+                    dgvEmployee.DataSource = bs;
+
+                }
+                else if (comboBoxSearch.SelectedIndex == 2)  //szukanie w kolumnie "Nazwisko"
+                {
+                    BindingSource bs = new BindingSource();
+                    bs.DataSource = (from em in db.Employee
+                                     where em.LastName.ToUpper().Contains(searched)
+                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName }).ToList();
+                    dgvEmployee.DataSource = bs;
+                }
+                else  //szukanie w kolumnie "Nazwa firmy"
+                {
+                    BindingSource bs = new BindingSource();
+                    bs.DataSource = (from em in db.Employee
+                                     where em.Company.CompanyName.ToUpper().Contains(searched)
+                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName }).ToList();
+                    dgvEmployee.DataSource = bs;
+                }
+
+                dgvEmployee.Refresh();
+                dgvEmployee.Columns[0].HeaderText = "ID Pracownika";
+                dgvEmployee.Columns[1].HeaderText = "Imie ";
+                dgvEmployee.Columns[2].HeaderText = "Nazwisko ";
+                dgvEmployee.Columns[3].HeaderText = "Nazwa Firmy";
+            }
+        }
+
+
+        //wyświetlanie danych z bazy dotyczących pracowników w dataGridView
+        public void DisplayEmployee()
+        {
+
+            BindingSource bs = new BindingSource();
+            var query = from e in db.Employee
+                        select new { e.Id, e.Name, e.LastName, e.Company.CompanyName };
+            bs.DataSource = query.ToList();
+            dgvEmployee.DataSource = bs;
+            dgvEmployee.Refresh();
+            dgvEmployee.Columns[0].HeaderText = "ID Pracownika";
+            dgvEmployee.Columns[1].HeaderText = "Imie ";
+            dgvEmployee.Columns[2].HeaderText = "Nazwisko ";
+            dgvEmployee.Columns[3].HeaderText = "Nazwa Firmy";
+
+        }
+
+        //wyświetlanie danych z bazy dotyczących firm w dataGridView
+        public void DisplayCompany()
+        {
+
+            BindingSource bs = new BindingSource();
+            var query = from c in db.Company
+                        select new { c.Id, c.CompanyName };
+            bs.DataSource = query.ToList();
+            dgvCompany.DataSource = bs;
+            dgvCompany.Refresh();
+            dgvCompany.Columns[0].HeaderText = "ID Firmy";
+            dgvCompany.Columns[1].HeaderText = "Nazwa Firmy";
+
+        }
+
+
+        //wypełnienie comboboxa  kolumnami datagrid, będącego częścią wyszukiwania pracowników
+        public void GetDgvEmloyeeColumns()
+        {
+            comboBoxSearch.Items.Clear();
+            comboBoxSearch.Items.Add("ID Pracownika");
+            comboBoxSearch.Items.Add("Imie");
+            comboBoxSearch.Items.Add("Nazwisko");
+            comboBoxSearch.Items.Add("Nazwa Firmy");
+        }
+
+        //wypełnienie comboboxa  kolumnami datagrid, będącego częścią wyszukiwania firm
+        public void GetDgvCompanyColumns()
+        {
+            comboBoxSearchCompany.Items.Clear();
+            comboBoxSearchCompany.Items.Add("ID Firmy");
+            comboBoxSearchCompany.Items.Add("Nazwa Firmy");
+        }
+
 
         //sprawdzenie, czy dana firma już jest w bazie
         public bool isCompanyExist(string companyName)
@@ -178,7 +362,8 @@ namespace ProjektZaliczeniowy
             return false;
 
         }
+  
+        
 
-       
     }
 }
