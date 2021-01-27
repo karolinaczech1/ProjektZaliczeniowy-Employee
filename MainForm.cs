@@ -16,6 +16,13 @@ namespace ProjektZaliczeniowy
         {
             InitializeComponent();
 
+            //odnalezienie ścieżki do bazy danych 
+            string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            String dir = System.IO.Path.GetDirectoryName(executable);
+            string root = System.IO.Directory.GetParent(dir).FullName;
+            root = root.Replace("bin", "");
+            AppDomain.CurrentDomain.SetData("DataDirectory", root);
+
             DisplayEmployee();
             DisplayCompany();
 
