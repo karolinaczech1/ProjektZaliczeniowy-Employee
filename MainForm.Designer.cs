@@ -44,6 +44,7 @@
             this.txtBoxSearchCompany = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxSearchCompany = new System.Windows.Forms.ComboBox();
+            this.btnCancelSearch = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCompany)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmployee)).BeginInit();
             this.SuspendLayout();
@@ -200,9 +201,21 @@
             this.comboBoxSearchCompany.TabIndex = 17;
             this.comboBoxSearchCompany.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchCompany_SelectedIndexChanged);
             // 
+            // btnCancelSearch
+            // 
+            this.btnCancelSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnCancelSearch.Location = new System.Drawing.Point(470, 18);
+            this.btnCancelSearch.Name = "btnCancelSearch";
+            this.btnCancelSearch.Size = new System.Drawing.Size(102, 47);
+            this.btnCancelSearch.TabIndex = 18;
+            this.btnCancelSearch.Text = "Anuluj wyszukiwanie";
+            this.btnCancelSearch.UseVisualStyleBackColor = true;
+            this.btnCancelSearch.Click += new System.EventHandler(this.btnCancelSearch_Click);
+            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(1070, 455);
+            this.Controls.Add(this.btnCancelSearch);
             this.Controls.Add(this.comboBoxSearchCompany);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtBoxSearchCompany);
@@ -247,6 +260,7 @@
         private System.Windows.Forms.TextBox txtBoxSearchCompany;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxSearchCompany;
+        private System.Windows.Forms.Button btnCancelSearch;
     }
 }
 

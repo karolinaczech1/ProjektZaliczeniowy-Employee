@@ -175,6 +175,13 @@ namespace ProjektZaliczeniowy
             SearchEmployee();
         }
 
+        //anulowanie wyszukiwania
+        private void btnCancelSearch_Click(object sender, EventArgs e)
+        {
+            txtBoxSearch.Text = "";
+            DisplayEmployee();
+        }
+
         //--------------------------WYSZUKIWANIE FIRMY -------------------------------------//
 
         //wyszukiwanie podczas zmiany tekstu w textboxie do wszukiwania firmy
@@ -261,7 +268,7 @@ namespace ProjektZaliczeniowy
                         BindingSource bs = new BindingSource();
                         bs.DataSource = (from em in db.Employee
                                          where em.Id == id
-                                         select new { em.Id, em.Name, em.LastName, em.Company.CompanyName }).ToList();
+                                         select new { em.Id, em.Name, em.LastName, em.Company.CompanyName, em.pesel }).ToList();
                         dgvEmployee.DataSource = bs;
 
                     }
@@ -270,25 +277,42 @@ namespace ProjektZaliczeniowy
                 {
                     BindingSource bs = new BindingSource();
                     bs.DataSource = (from em in db.Employee
-                                     where em.Name.ToUpper().Contains(searched)
-                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName }).ToList();
+                                     where (em.Name.ToUpper()+" "+em.LastName.ToUpper()).Contains(searched)
+                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName, em.pesel }).ToList();
                     dgvEmployee.DataSource = bs;
 
                 }
-                else if (comboBoxSearch.SelectedIndex == 2)  //szukanie w kolumnie "Nazwisko"
+                else if (comboBoxSearch.SelectedIndex == 2)  //szukanie w kolumnie "Imie"
+                {
+                    BindingSource bs = new BindingSource();
+                    bs.DataSource = (from em in db.Employee
+                                     where em.Name.ToUpper().Contains(searched)
+                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName, em.pesel }).ToList();
+                    dgvEmployee.DataSource = bs;
+
+                }
+                else if (comboBoxSearch.SelectedIndex == 3)  //szukanie w kolumnie "Nazwisko"
                 {
                     BindingSource bs = new BindingSource();
                     bs.DataSource = (from em in db.Employee
                                      where em.LastName.ToUpper().Contains(searched)
-                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName }).ToList();
+                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName, em.pesel }).ToList();
                     dgvEmployee.DataSource = bs;
                 }
-                else  //szukanie w kolumnie "Nazwa firmy"
+                else if (comboBoxSearch.SelectedIndex == 4) //szukanie w kolumnie "Nazwa firmy"
                 {
                     BindingSource bs = new BindingSource();
                     bs.DataSource = (from em in db.Employee
                                      where em.Company.CompanyName.ToUpper().Contains(searched)
-                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName }).ToList();
+                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName, em.pesel }).ToList();
+                    dgvEmployee.DataSource = bs;
+                }
+                else //szukanie w kolumnie "Pesel"
+                {
+                    BindingSource bs = new BindingSource();
+                    bs.DataSource = (from em in db.Employee
+                                     where em.pesel.ToUpper().Contains(searched)
+                                     select new { em.Id, em.Name, em.LastName, em.Company.CompanyName, em.pesel }).ToList();
                     dgvEmployee.DataSource = bs;
                 }
 
@@ -307,7 +331,7 @@ namespace ProjektZaliczeniowy
 
             BindingSource bs = new BindingSource();
             var query = from e in db.Employee
-                        select new { e.Id, e.Name, e.LastName, e.Company.CompanyName };
+                        select new { e.Id, e.Name, e.LastName, e.Company.CompanyName, e.pesel };
             bs.DataSource = query.ToList();
             dgvEmployee.DataSource = bs;
             dgvEmployee.Refresh();
@@ -339,9 +363,11 @@ namespace ProjektZaliczeniowy
         {
             comboBoxSearch.Items.Clear();
             comboBoxSearch.Items.Add("ID Pracownika");
+            comboBoxSearch.Items.Add("Imie i nazwisko");
             comboBoxSearch.Items.Add("Imie");
             comboBoxSearch.Items.Add("Nazwisko");
             comboBoxSearch.Items.Add("Nazwa Firmy");
+            comboBoxSearch.Items.Add("PESEL");
         }
 
         //wypełnienie comboboxa  kolumnami datagrid, będącego częścią wyszukiwania firm
@@ -369,8 +395,20 @@ namespace ProjektZaliczeniowy
             return false;
 
         }
-  
-        
 
+        //sprawdzenie, czy pracownik już jest w bazie za pomoca numeru pesel
+        public bool isEmployeeExist(string pesel)
+        {
+            List<string> pesels = new List<string>();
+            pesels = (from e in db.Employee select e.pesel).ToList();
+
+            foreach (string p in pesels)
+            {
+                if (p == pesel) return true;
+            }
+            return false;
+        }
+
+       
     }
 }

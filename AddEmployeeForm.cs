@@ -31,44 +31,60 @@ namespace ProjektZaliczeniowy
         private void buttonAddEmployee_Click(object sender, EventArgs e)
         {
             
-            if (txtBoxName.Text != string.Empty && txtBoxLastName.Text != string.Empty)  //sprawdzenie, czy wpisano imie i nazwisko
+            if (txtBoxName.Text != string.Empty && txtBoxLastName.Text != string.Empty && txtBoxPesel.Text != string.Empty)  //sprawdzenie, czy wpisano imie i nazwisko
             {
                 string name = txtBoxName.Text;
                 string lastName = txtBoxLastName.Text;
+                string pesel = txtBoxPesel.Text;
 
-                //wyzanczenie id dla dodawanego pracownika
-                long id;
-                if (db.Employee.Count() > 0) id = db.Employee.Max(em => em.Id) + 1;
-                else id = 1;
 
-                //DODAWANIE PRACOWNIKA BEZ FIRMY
-                if (checkBoxIfCompany.Checked == true)
+                if (mainForm.isEmployeeExist(pesel) == false) //sprawdzenie, czy pracownik na pewno nie istnieje
                 {
-                    AddEmployeeWithoutCompany(id, name, lastName);               
-                }
-                //dodawanie pracownika z firmą
-                else
-                {
-                    //DODAWANIE PRACOWNIKA Z FIRMĄ WYBRANĄ Z ISTNIEJĄCYCH (z comboboxa)
-                    if(checkBoxNewCompany.Checked == false)
-                    {                      
-                        if(comboBoxCompany.SelectedItem != null)   //sprawdzenie, czy wybrano firmę z istniejących
-                        {
 
-                            AddEmployeeWithCompany(id, name, lastName);
-                            
-                        }                     
+                    //wyzanczenie id dla dodawanego pracownika
+                    long id;
+                    if (db.Employee.Count() > 0) id = db.Employee.Max(em => em.Id) + 1;
+                    else id = 1;
+
+
+                    //DODAWANIE PRACOWNIKA BEZ FIRMY
+                    if (checkBoxIfCompany.Checked == true)
+                    {
+                        AddEmployeeWithoutCompany(id, name, lastName, pesel);               
                     }
-                    //DODAWANIE PRACOWNIKA WRAZ Z DODANIEM NOWEJ FIRMY
-                    else 
-                    {                      
-                        if(txtBoxNewCompany.Text != string.Empty)   //sprawdzenie, czy uzytkownik wpisal nazwe nowej firmy
-                        {
-                            AddEmployeeAndCompany(id, name,  lastName);                        
+                    //DODAWANE PRACOWNIKA Z FIRMĄ
+                    else
+                    {
+                        //DODAWANIE PRACOWNIKA Z FIRMĄ WYBRANĄ Z ISTNIEJĄCYCH (z comboboxa)
+                        if(checkBoxNewCompany.Checked == false)
+                        {                      
+                            if(comboBoxCompany.SelectedItem != null)   //sprawdzenie, czy wybrano firmę z istniejących
+                            {
+
+                                AddEmployeeWithCompany(id, name, lastName, pesel);
+                            
+                            }                     
+                        }
+                        //DODAWANIE PRACOWNIKA WRAZ Z DODANIEM NOWEJ FIRMY
+                        else 
+                        {                      
+                            if(txtBoxNewCompany.Text != string.Empty)   //sprawdzenie, czy uzytkownik wpisal nazwe nowej firmy
+                            {
+                                AddEmployeeAndCompany(id, name,  lastName, pesel);                        
+                            }
                         }
                     }
                 }
+                else
+                {
+                    MessageBox.Show("Pracownik o takim numerze PESEL już istnieje w bazie.");
+                }
+               
 
+            }
+            else
+            {
+                MessageBox.Show("Uzupełnij wszystkie dane.");
             }
 
         }
@@ -76,23 +92,33 @@ namespace ProjektZaliczeniowy
 
 
         //dodawanie pracownika bez firmy
-        public void AddEmployeeWithoutCompany(long id, string name, string lastName)
+        public void AddEmployeeWithoutCompany(long id, string name, string lastName, string pesel)
         {
-            var newEmployee = new Employee
-            {
-                Id = id,
-                Name = name,
-                LastName = lastName,
-                CompanyId = null
-            };
 
-            db.Employee.Add(newEmployee);
-            db.SaveChanges();
-            this.Close();
+                var newEmployee = new Employee
+                {
+                    Id = id,
+                    Name = name,
+                    LastName = lastName,
+                    CompanyId = null,
+                    pesel = pesel
+                };
+           
+                db.Employee.Add(newEmployee);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+    
+                this.Close();
         }
 
         //dodawanie pracownika z firmą (wybraną z comboboxa)
-        public void AddEmployeeWithCompany(long id, string name, string lastName)
+        public void AddEmployeeWithCompany(long id, string name, string lastName, string pesel)
         {
             List<Company> company = new List<Company>();
             string selectedCompany = comboBoxCompany.SelectedItem.ToString();
@@ -103,15 +129,23 @@ namespace ProjektZaliczeniowy
                 Id = id,
                 Name = name,
                 LastName = lastName,
-                CompanyId = company[0].Id
+                CompanyId = company[0].Id,
+                pesel = pesel
             };
             db.Employee.Add(newEmployee);
-            db.SaveChanges();
+            try
+            {
+               db.SaveChanges();
+            }catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
             this.Close();
+
         }
 
         //dodawanie pracownika wraz z utworzeniem nowej firmy
-        public void AddEmployeeAndCompany(long id, string name, string lastName)
+        public void AddEmployeeAndCompany(long id, string name, string lastName, string pesel)
         {
             List<Company> addedCompany = new List<Company>();
             string companyName = txtBoxNewCompany.Text;
@@ -138,12 +172,21 @@ namespace ProjektZaliczeniowy
                     Id = id,
                     Name = name,
                     LastName = lastName,
-                    CompanyId = addedCompany[0].Id
+                    CompanyId = addedCompany[0].Id,
+                    pesel = pesel
                 };
                 db.Employee.Add(newEmployee);
-                db.SaveChanges();
-                mainForm.DisplayCompany();
+                try
+                {
+                    db.SaveChanges();
+                    mainForm.DisplayCompany();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
                 this.Close();
+            
             }
             else  //jeśli dodawana firma już istnieje
             {
@@ -195,6 +238,17 @@ namespace ProjektZaliczeniowy
             {
                 txtBoxNewCompany.Hide();
             }
+        }
+
+        
+
+        //wpisywanie tylko liczb do textboxa na pesel
+        private void txtBoxPesel_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Back)
+                base.OnKeyPress(e);
+            else
+                e.Handled = true;
         }
     }
 }

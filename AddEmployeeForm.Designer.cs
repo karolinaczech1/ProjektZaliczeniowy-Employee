@@ -38,6 +38,8 @@
             this.checkBoxNewCompany = new System.Windows.Forms.CheckBox();
             this.buttonAddEmployee = new System.Windows.Forms.Button();
             this.checkBoxIfCompany = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtBoxPesel = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtBoxName
@@ -56,7 +58,7 @@
             // 
             // txtBoxNewCompany
             // 
-            this.txtBoxNewCompany.Location = new System.Drawing.Point(129, 232);
+            this.txtBoxNewCompany.Location = new System.Drawing.Point(129, 282);
             this.txtBoxNewCompany.Name = "txtBoxNewCompany";
             this.txtBoxNewCompany.Size = new System.Drawing.Size(174, 22);
             this.txtBoxNewCompany.TabIndex = 2;
@@ -82,7 +84,7 @@
             // labelCompany
             // 
             this.labelCompany.AutoSize = true;
-            this.labelCompany.Location = new System.Drawing.Point(74, 156);
+            this.labelCompany.Location = new System.Drawing.Point(74, 206);
             this.labelCompany.Name = "labelCompany";
             this.labelCompany.Size = new System.Drawing.Size(49, 17);
             this.labelCompany.TabIndex = 5;
@@ -91,7 +93,7 @@
             // comboBoxCompany
             // 
             this.comboBoxCompany.FormattingEnabled = true;
-            this.comboBoxCompany.Location = new System.Drawing.Point(129, 153);
+            this.comboBoxCompany.Location = new System.Drawing.Point(129, 203);
             this.comboBoxCompany.Name = "comboBoxCompany";
             this.comboBoxCompany.Size = new System.Drawing.Size(174, 24);
             this.comboBoxCompany.TabIndex = 6;
@@ -99,7 +101,7 @@
             // checkBoxNewCompany
             // 
             this.checkBoxNewCompany.AutoSize = true;
-            this.checkBoxNewCompany.Location = new System.Drawing.Point(129, 205);
+            this.checkBoxNewCompany.Location = new System.Drawing.Point(129, 255);
             this.checkBoxNewCompany.Name = "checkBoxNewCompany";
             this.checkBoxNewCompany.Size = new System.Drawing.Size(137, 21);
             this.checkBoxNewCompany.TabIndex = 7;
@@ -109,7 +111,7 @@
             // 
             // buttonAddEmployee
             // 
-            this.buttonAddEmployee.Location = new System.Drawing.Point(150, 284);
+            this.buttonAddEmployee.Location = new System.Drawing.Point(150, 334);
             this.buttonAddEmployee.Name = "buttonAddEmployee";
             this.buttonAddEmployee.Size = new System.Drawing.Size(116, 34);
             this.buttonAddEmployee.TabIndex = 8;
@@ -120,7 +122,7 @@
             // checkBoxIfCompany
             // 
             this.checkBoxIfCompany.AutoSize = true;
-            this.checkBoxIfCompany.Location = new System.Drawing.Point(77, 126);
+            this.checkBoxIfCompany.Location = new System.Drawing.Point(77, 176);
             this.checkBoxIfCompany.Name = "checkBoxIfCompany";
             this.checkBoxIfCompany.Size = new System.Drawing.Size(97, 21);
             this.checkBoxIfCompany.TabIndex = 9;
@@ -128,11 +130,30 @@
             this.checkBoxIfCompany.UseVisualStyleBackColor = true;
             this.checkBoxIfCompany.CheckedChanged += new System.EventHandler(this.checkBoxIfCompany_CheckedChanged);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(71, 126);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(52, 17);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "PESEL";
+            // 
+            // txtBoxPesel
+            // 
+            this.txtBoxPesel.Location = new System.Drawing.Point(129, 123);
+            this.txtBoxPesel.Name = "txtBoxPesel";
+            this.txtBoxPesel.Size = new System.Drawing.Size(174, 22);
+            this.txtBoxPesel.TabIndex = 10;
+            this.txtBoxPesel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBoxPesel_KeyPress);
+            // 
             // AddEmployeeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(421, 338);
+            this.ClientSize = new System.Drawing.Size(426, 380);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtBoxPesel);
             this.Controls.Add(this.checkBoxIfCompany);
             this.Controls.Add(this.buttonAddEmployee);
             this.Controls.Add(this.checkBoxNewCompany);
@@ -162,5 +183,7 @@
         private System.Windows.Forms.CheckBox checkBoxNewCompany;
         private System.Windows.Forms.Button buttonAddEmployee;
         private System.Windows.Forms.CheckBox checkBoxIfCompany;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtBoxPesel;
     }
 }

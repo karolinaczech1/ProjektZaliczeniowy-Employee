@@ -22,10 +22,12 @@ namespace ProjektZaliczeniowy
             GetCompanies();
 
             //wczytanie danych pracownika
+            txtBoxId.Text = mainForm.dgvEmployee.Rows[mainForm.dgvEmployee.CurrentRow.Index].Cells[0].Value.ToString();
             txtBoxName.Text = mainForm.dgvEmployee.Rows[mainForm.dgvEmployee.CurrentRow.Index].Cells[1].Value.ToString();
             txtBoxLastName.Text = mainForm.dgvEmployee.Rows[mainForm.dgvEmployee.CurrentRow.Index].Cells[2].Value.ToString();
-            
-            if(mainForm.dgvEmployee.Rows[mainForm.dgvEmployee.CurrentRow.Index].Cells[3].Value == null) //jeśli pracownik nie ma przypisanej firmy
+            txtBoxPesel.Text = mainForm.dgvEmployee.Rows[mainForm.dgvEmployee.CurrentRow.Index].Cells[4].Value.ToString();
+
+            if (mainForm.dgvEmployee.Rows[mainForm.dgvEmployee.CurrentRow.Index].Cells[3].Value == null) //jeśli pracownik nie ma przypisanej firmy
             {
                 checkBoxIfCompany.Checked = true;             
             }
@@ -45,6 +47,7 @@ namespace ProjektZaliczeniowy
             {
                 string name = txtBoxName.Text;
                 string lastName = txtBoxLastName.Text;
+                
 
                 //znalezienie id edytowanego pracownika
                 long id = Convert.ToInt64(mainForm.dgvEmployee.Rows[mainForm.dgvEmployee.CurrentRow.Index].Cells[0].Value);
@@ -98,7 +101,14 @@ namespace ProjektZaliczeniowy
                     CompanyName = companyName,
                 };
                 db.Company.Add(newCompany);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
 
                 //edycja pracownika z nową firmą
                 addedCompany = (from c in db.Company where c.CompanyName == companyName select c).ToList();
@@ -106,8 +116,16 @@ namespace ProjektZaliczeniowy
                 selectedEmployee.Name = name;
                 selectedEmployee.LastName = lastName;
                 selectedEmployee.CompanyId = addedCompany[0].Id;
-                db.SaveChanges();
-                mainForm.DisplayCompany();
+                try
+                {
+                    db.SaveChanges();
+                    mainForm.DisplayCompany();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+               
                 this.Close();
             }
             else  //jeśli dodawana firma już istnieje
@@ -129,7 +147,14 @@ namespace ProjektZaliczeniowy
             selectedEmployee.Name = name;
             selectedEmployee.LastName = lastName;
             selectedEmployee.CompanyId = company[0].Id;
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
             this.Close();
         }
 
@@ -140,7 +165,14 @@ namespace ProjektZaliczeniowy
             selectedEmployee.Name = name;
             selectedEmployee.LastName = lastName;
             selectedEmployee.CompanyId = null;
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
             this.Close();
         }
 
