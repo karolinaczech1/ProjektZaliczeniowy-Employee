@@ -18,6 +18,7 @@ namespace ProjektZaliczeniowy
         public string Name { get; set; }
         public string LastName { get; set; }
         public Nullable<long> CompanyId { get; set; }
+        public string pesel { get; set; }
     
         public virtual Company Company { get; set; }
     }
