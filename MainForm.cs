@@ -23,13 +23,21 @@ namespace ProjektZaliczeniowy
             root = root.Replace("bin", "");
             AppDomain.CurrentDomain.SetData("DataDirectory", root);
 
-            DisplayEmployee();
-            DisplayCompany();
+            try
+            {
+                DisplayEmployee();
+                DisplayCompany();
 
-            GetDgvEmloyeeColumns();
-            comboBoxSearch.SelectedIndex = 0;
-            GetDgvCompanyColumns();
-            comboBoxSearchCompany.SelectedIndex = 1;
+                GetDgvEmloyeeColumns();
+                comboBoxSearch.SelectedIndex = 0;
+                GetDgvCompanyColumns();
+                comboBoxSearchCompany.SelectedIndex = 1;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+           
 
         }
 
