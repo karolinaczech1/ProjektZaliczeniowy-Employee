@@ -22,6 +22,7 @@ namespace ProjektZaliczeniowy
             string root = System.IO.Directory.GetParent(dir).FullName;
             root = root.Replace("bin", "");
             AppDomain.CurrentDomain.SetData("DataDirectory", root);
+          
 
             try
             {
